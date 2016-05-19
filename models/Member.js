@@ -77,5 +77,27 @@ Member.prototype.save = function (cb) {
   }
 };
 
+Member.check = function(memberAccount, cb) {
+  db.select()
+    .from('member')
+    .where({
+      account : memberAccount
+    })
+    .map(function(row) {
+      return new Member(row);
+    })
+    .then(function(memberList) {
+      if(memberList.length) {
+        cb(null, memberList[0]);
+      } else {
+        cb(new GeneralErrors.NotFound());
+      }
+    })
+    .catch(function(err) {
+      cb(err);
+    })
+}
+
+
 //這樣基本上就完成了一個DataModel會用到的method, 之後有需要的時候再過來新增
 module.exports = Member;
